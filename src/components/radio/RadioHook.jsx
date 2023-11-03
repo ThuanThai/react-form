@@ -12,6 +12,7 @@ const RadioHook = ({ control, name, ...props }) => {
                 {...field}
                 value={props.value}
                 type="radio"
+                {...props}
             />
             <div className="w-full h-full bg-white rounded-full"></div>
         </label>

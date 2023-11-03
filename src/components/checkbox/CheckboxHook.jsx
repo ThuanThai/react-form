@@ -9,9 +9,9 @@ const CheckboxHook = ({ control, name, text, ...props }) => {
     return (
         <label className="cursor-pointer custom-checkbox">
             <input
+                checked={field.value}
                 className="hidden"
                 {...field}
-                {...props}
                 id="checkbox"
                 type="checkbox"
             />

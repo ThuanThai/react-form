@@ -29,8 +29,8 @@ const schema = yup.object({
         .oneOf(["male", "female"]),
     job: yup.string().required("Please select your job"),
     term: yup
-        .string()
-        .oneOf(["true"], "Please accept with the terms and condition"),
+        .boolean()
+        .oneOf([true], "Please accept with the terms and condition"),
 });
 
 const dropdownData = [
@@ -53,6 +53,7 @@ const dropdownData = [
         id: 4,
         value: "constructor",
         text: "Constructor",
+        term: false,
     },
 ];
 
@@ -61,13 +62,29 @@ const RegisterFormHook = () => {
         handleSubmit,
         control,
         setValue,
-        formState: { errors },
-    } = useForm({ resolver: yupResolver(schema) });
-    const onSubmit = (value) => console.log(value);
+        formState: { errors, isValid, isSubmitting },
+        reset,
+    } = useForm({ mode: "onChange" });
+
+    const onSubmitHandler = (value) => {
+        if (!isValid) return;
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+                console.log(value);
+                reset({
+                    username: "",
+                    email: "",
+                    password: "",
+                    term: false,
+                });
+            }, 2000);
+        });
+    };
 
     return (
         <form
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmitHandler)}
             className="max-w-[300px] mx-auto my-10">
             <div className="flex flex-col gap-3 mb-5">
                 <label className="font-semibold text-md" htmlFor="username">
@@ -174,8 +191,16 @@ const RegisterFormHook = () => {
                     </p>
                 )}
             </div>
-            <button className="w-full p-3 text-base font-semibold text-white bg-blue-500 rounded-md">
-                Submit
+            <button
+                disabled={isSubmitting}
+                className={`w-full p-3 text-base font-semibold text-white bg-blue-500 rounded-md ${
+                    isSubmitting ? "opacity-50" : ""
+                }`}>
+                {isSubmitting ? (
+                    <div className="border-2 w-5 h-5 rounded-full border-t-transparent border-white animate-spin mx-auto"></div>
+                ) : (
+                    "Submit"
+                )}
             </button>
         </form>
     );
