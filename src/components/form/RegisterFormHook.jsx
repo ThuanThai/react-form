@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import InputHook from "../input/InputHook";
 import RadioHook from "../radio/RadioHook";
 import CheckboxHook from "../checkbox/CheckboxHook";
@@ -64,23 +64,38 @@ const RegisterFormHook = () => {
         setValue,
         formState: { errors, isValid, isSubmitting },
         reset,
-    } = useForm({ mode: "onChange" });
+        watch,
+    } = useForm({
+        mode: "onChange",
+        defaultValues: {
+            job: "",
+            term: false,
+            gender: "male",
+        },
+    });
 
     const onSubmitHandler = (value) => {
         if (!isValid) return;
         return new Promise((resolve) => {
             setTimeout(() => {
                 resolve();
-                console.log(value);
                 reset({
                     username: "",
                     email: "",
                     password: "",
                     term: false,
+                    gender: "male",
+                    job: "",
                 });
             }, 2000);
         });
     };
+
+    const watchGender = watch("gender");
+    console.log(
+        "🚀 ~ file: RegisterFormHook.jsx:94 ~ RegisterFormHook ~ watch:",
+        watchGender
+    );
 
     return (
         <form
@@ -144,6 +159,7 @@ const RegisterFormHook = () => {
                 <div className="flex items-center gap-x-5">
                     <div className="flex items-center gap-x-3">
                         <RadioHook
+                            checked={watchGender === "male"}
                             value="male"
                             control={control}
                             name="gender"
@@ -152,6 +168,7 @@ const RegisterFormHook = () => {
                     </div>
                     <div className="flex items-center gap-x-3">
                         <RadioHook
+                            checked={watchGender === "female"}
                             value="female"
                             control={control}
                             name="gender"
@@ -170,6 +187,7 @@ const RegisterFormHook = () => {
                     Are you
                 </label>
                 <DropdownHook
+                    title="Select your job"
                     setValue={setValue}
                     name="job"
                     control={control}
@@ -182,6 +200,7 @@ const RegisterFormHook = () => {
             </div>
             <div className="flex flex-col gap-3 mb-5">
                 <CheckboxHook
+                    defaultChecked={false}
                     name="term"
                     control={control}
                     text="I accept the terms and conditions"></CheckboxHook>
@@ -197,7 +216,7 @@ const RegisterFormHook = () => {
                     isSubmitting ? "opacity-50" : ""
                 }`}>
                 {isSubmitting ? (
-                    <div className="border-2 w-5 h-5 rounded-full border-t-transparent border-white animate-spin mx-auto"></div>
+                    <div className="w-5 h-5 mx-auto border-2 border-white rounded-full border-t-transparent animate-spin"></div>
                 ) : (
                     "Submit"
                 )}

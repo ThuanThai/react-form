@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useWatch } from "react-hook-form";
 import useClickOutside from "../../hooks/useClickOutside";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const DropdownHook = ({ control, name, setValue, data }) => {
+const DropdownHook = ({ control, name, setValue, data, title }) => {
     const { state, setState, nodeRef } = useClickOutside();
 
     // eslint-disable-next-line no-unused-vars
@@ -12,12 +12,19 @@ const DropdownHook = ({ control, name, setValue, data }) => {
         control,
         defaultValue: "",
     });
-    const [label, setLabel] = useState("Select your job");
+    const [label, setLabel] = useState(title);
 
     const handleClickDropdownItem = (e) => {
         setLabel(e.target.textContent);
         setValue(name, e.target.dataset.value);
     };
+
+    useEffect(() => {
+        if (jobVal === "") {
+            setLabel(title);
+        }
+    }, [jobVal]);
+
     return (
         <div
             onClick={() => setState((prev) => !prev)}

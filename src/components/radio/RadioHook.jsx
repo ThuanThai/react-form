@@ -1,6 +1,6 @@
 import { useController } from "react-hook-form";
 
-const RadioHook = ({ control, name, ...props }) => {
+const RadioHook = ({ control, name, value, ...props }) => {
     const { field } = useController({
         name,
         control,
@@ -8,11 +8,11 @@ const RadioHook = ({ control, name, ...props }) => {
     return (
         <label className="cursor-pointer custom-radio">
             <input
-                className="hidden"
-                {...field}
-                value={props.value}
-                type="radio"
                 {...props}
+                {...field}
+                className="hidden"
+                value={value}
+                type="radio"
             />
             <div className="w-full h-full bg-white rounded-full"></div>
         </label>
